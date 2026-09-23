@@ -1,0 +1,141 @@
+﻿@model IEnumerable<EcommerceApp.Models.Product>
+
+@{
+    ViewData["Title"] = "Catálogo de Productos | Vault";
+}
+
+<div class="bg-black text-white py-5 min-vh-100">
+    <div class="container">
+
+        <!-- ENCABEZADO Y MIGA DE PAN -->
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-secondary text-decoration-none">Inicio</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Productos</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-black text-uppercase tracking-wider mb-0" style="letter-spacing: 2px;">TODOS LOS PRODUCTOS</h2>
+            </div>
+
+            <!-- Selector de Ordenamiento -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary small d-none d-sm-inline">Ordenar por:</span>
+                <select class="form-select form-select-sm bg-black text-white border-secondary rounded-0 shadow-none" style="width: auto; font-size: 0.8rem;">
+                    <option selected>Más reciente</option>
+                    <option value="1">Precio: Menor a Mayor</option>
+                    <option value="2">Precio: Mayor a Menor</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- FILTROS LATERALES -->
+            <div class="col-lg-3">
+                <div class="p-3 bg-dark border border-secondary">
+                    <h5 class="text-uppercase fw-bold mb-3 border-bottom border-secondary pb-2" style="letter-spacing: 1px; font-size: 0.9rem;">Categorías</h5>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Todas las prendas</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Arriba (Remeras / Hoodies)</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Abajo (Pantalones / Shorts)</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Accesorios</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none text-warning">Ofertas / Drops</a></li>
+                    </ul>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Create" class="btn btn-outline-light text-uppercase fw-bold rounded-0 w-100 py-2" style="font-size: 0.75rem;">
+                            + Publicar Producto
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <!-- GRILLA DE PRODUCTOS -->
+            <div class="col-lg-9">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <div class="col">
+                                <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
+                                    <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" class="img-fluid h-100 w-100 object-fit-cover" alt="@item.Name" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-secondary fw-bold small">📷 [ @item.Name.ToUpper() ]</span>
+                                        }
+                                    </div>
+                                    <div class="card-body p-0 d-flex flex-column align-items-center">
+                                        <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">@item.Name</h6>
+                                        <p class="fw-bold fs-5 mb-3">$@item.Price.ToString("N2")</p>
+
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
+                                            Ver Detalle
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Muestra estática si no hay productos cargados en la base de datos -->
+                        <div class="col">
+                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
+                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
+                                    <span class="text-secondary fw-bold small">📷 [ WORK SHORT DICKIES ]</span>
+                                </div>
+                                <div class="card-body p-0 d-flex flex-column align-items-center">
+                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">WORK SHORT DICKIES - T. 48</h6>
+                                    <p class="fw-bold fs-5 mb-3">$64.990,00</p>
+                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
+                                        Agregar al Carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
+                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
+                                    <span class="text-secondary fw-bold small">📷 [ REMERA HARLEY DAVIDSON ]</span>
+                                </div>
+                                <div class="card-body p-0 d-flex flex-column align-items-center">
+                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">REMERA HARLEY DAVIDSON - T. XL</h6>
+                                    <p class="fw-bold fs-5 mb-3">$49.990,00</p>
+                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
+                                        Agregar al Carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
+                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
+                                    <span class="text-secondary fw-bold small">📷 [ JEAN LEVI'S 501 ]</span>
+                                </div>
+                                <div class="card-body p-0 d-flex flex-column align-items-center">
+                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">JEAN LEVIS 501 VINTAGE - T. 42</h6>
+                                    <p class="fw-bold fs-5 mb-3">$72.000,00</p>
+                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
+                                        Agregar al Carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

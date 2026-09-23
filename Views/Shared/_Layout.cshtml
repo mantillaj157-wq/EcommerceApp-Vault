@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vault</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EcommerceApp.styles.css" asp-append-version="true" />
+</head>
+<body class="bg-black text-white">
+    <header>
+        <!-- Cinta superior de anuncios -->
+        <div class="bg-dark text-white text-center py-1 fw-semibold" style="font-size: 0.8rem; letter-spacing: 1px;">
+            ✨ COLECCIÓN RETRO & STREETWEAR — ENVÍOS A TODO EL PAÍS ✨
+        </div>
+
+        <!-- Encabezado Principal de Vault -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary py-3">
+            <div class="container-fluid px-4">
+
+                <!-- Logo principal: VAULT (Redirige a la página principal / Home) -->
+                <a class="navbar-brand fw-bold text-uppercase fs-2 me-4" asp-controller="Home" asp-action="Index" style="letter-spacing: 2px;">
+                    VAULT
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVaultContent" aria-controls="navbarVaultContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarVaultContent">
+
+                    <!-- Menú de navegación -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-uppercase fw-semibold" style="font-size: 0.9rem; letter-spacing: 1px;">
+                        <!-- INICIO -> Apunta a Home/Index -->
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">INICIO</a>
+                        </li>
+                        <!-- PRODUCTOS -> Apunta a Products/Index -->
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-secondary" asp-controller="Products" asp-action="Index">PRODUCTOS</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-secondary" asp-controller="Products" asp-action="Index" asp-route-category="Ofertas">OFERTAS</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-secondary" href="#">TALLES</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-secondary" href="#">PREGUNTAS</a>
+                        </li>
+                    </ul>
+
+                    <!-- Sección Derecha: Búsqueda, Usuario y Carrito -->
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+
+                        <!-- Buscador -->
+                        <form class="d-flex align-items-center position-relative me-2" asp-controller="Products" asp-action="Index" method="get">
+                            <input class="form-control bg-transparent text-white border-0 border-bottom border-secondary rounded-0 pe-4 shadow-none"
+                                   type="search" name="searchString" placeholder="Buscar" aria-label="Buscar" style="width: 140px; font-size: 0.9rem;">
+                            <button class="btn btn-link text-white p-0 position-absolute end-0" type="submit">
+                                <i class="bi bi-search fs-5"></i>
+                            </button>
+                        </form>
+
+                        <!-- Usuario / Sesión -->
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-person fs-4 text-white" title="@User.Identity.Name"></i>
+                                <a asp-controller="Account" asp-action="Logout" class="text-secondary small text-decoration-none" style="font-size: 0.8rem;">(Salir)</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="text-white text-decoration-none" title="Iniciar Sesión">
+                                <i class="bi bi-person fs-4"></i>
+                            </a>
+                        }
+
+                        <!-- Carrito -->
+                        <a href="#" class="text-white text-decoration-none d-flex align-items-center position-relative ms-2" title="Carrito de Compras">
+                            <i class="bi bi-cart3 fs-4"></i>
+                            <span class="badge bg-secondary rounded-circle ms-1 px-2 py-1" style="font-size: 0.75rem;">0</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top border-secondary footer text-muted bg-black py-3 mt-5">
+        <div class="container text-center text-secondary">
+            &copy; 2026 - VAULT - Tienda Retro & Streetwear
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

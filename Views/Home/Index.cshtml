@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Vault | Tienda Retro";
+}
+
+<div class="bg-black text-white py-4">
+
+    <!-- 1. BANNER PRINCIPAL HERO -->
+    <div class="text-center py-5 mb-4 border-bottom border-secondary">
+        <div class="container py-3">
+            <h1 class="display-1 fw-black text-uppercase tracking-wider mb-2" style="letter-spacing: 6px; font-weight: 900;">
+                VAULT
+            </h1>
+            <p class="lead text-secondary mx-auto fs-5" style="max-width: 600px; letter-spacing: 1px;">
+                Ropa de segunda mano curada, prendas de colección y streetwear retro.
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. SECCIÓN DEL HOMBRE / MODELO (NUEVO DROP YA DISPONIBLE) -->
+    <div class="container mb-5 py-4">
+        <div class="row align-items-center g-4">
+            
+            <!-- Grilla 2x2 de prendas/fotos -->
+            <div class="col-lg-6">
+                <div class="row row-cols-2 g-2">
+                    <div class="col">
+                        <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-secondary fw-bold" style="height: 200px;">
+                            📷 [ GORRAS ]
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-secondary fw-bold" style="height: 200px;">
+                            📷 [ JEANS ]
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-secondary fw-bold" style="height: 200px;">
+                            📷 [ CARGOS ]
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-secondary fw-bold" style="height: 200px;">
+                            📷 [ CAMPERAS ]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Foto del Hombre/Modelo y texto promocional -->
+            <div class="col-lg-6 ps-lg-5 text-center text-lg-start">
+                <!-- Marco para la foto del hombre/modelo -->
+                <div class="bg-dark border border-secondary mb-4 d-flex align-items-center justify-content-center" style="height: 280px; width: 100%;">
+                    <!-- Si tienes la imagen del hombre, reemplaza esta etiqueta por: <img src="~/images/hombre-drop.jpg" class="img-fluid h-100 w-100 object-fit-cover" /> -->
+                    <span class="text-secondary fw-bold fs-5">📷 [ FOTO DEL HOMBRE / MODELO ]</span>
+                </div>
+
+                <h2 class="display-5 fw-black text-uppercase tracking-wider mb-3" style="letter-spacing: 2px;">
+                    NUEVO DROP YA<br />DISPONIBLE
+                </h2>
+                <p class="text-secondary fs-6 mb-4" style="max-width: 480px;">
+                    Muchas prendas increíbles, tocá la imagen o el botón para explorar las joyas antes de que se agoten.
+                </p>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-outline-light text-uppercase fw-bold rounded-0 px-4 py-2" style="letter-spacing: 1.5px;">
+                    Ver Catálogo Completo
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. SECCIÓN: CATEGORÍAS (ARRIBA, ABAJO, OFERTAS) -->
+    <div class="container mb-5 py-4 border-top border-secondary">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Categoría ARRIBA -->
+            <div class="col">
+                <div class="position-relative bg-dark border border-secondary d-flex align-items-center justify-content-center" style="height: 380px;">
+                    <div class="text-center z-1">
+                        <h3 class="fw-black text-uppercase text-white tracking-widest mb-3" style="letter-spacing: 3px;">ARRIBA</h3>
+                        <a asp-controller="Products" asp-action="Index" asp-route-category="Arriba" class="btn btn-secondary text-uppercase fw-bold rounded-0 px-4 py-2 opacity-90" style="font-size: 0.8rem; letter-spacing: 1px; background-color: #5a4b41; border: none;">
+                            VER MÁS
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoría ABAJO -->
+            <div class="col">
+                <div class="position-relative bg-dark border border-secondary d-flex align-items-center justify-content-center" style="height: 380px;">
+                    <div class="text-center z-1">
+                        <h3 class="fw-black text-uppercase text-white tracking-widest mb-3" style="letter-spacing: 3px;">ABAJO</h3>
+                        <a asp-controller="Products" asp-action="Index" asp-route-category="Abajo" class="btn btn-secondary text-uppercase fw-bold rounded-0 px-4 py-2 opacity-90" style="font-size: 0.8rem; letter-spacing: 1px; background-color: #5a4b41; border: none;">
+                            VER MÁS
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoría OFERTAS -->
+            <div class="col">
+                <div class="position-relative bg-dark border border-secondary d-flex align-items-center justify-content-center" style="height: 380px;">
+                    <div class="text-center z-1">
+                        <h3 class="fw-black text-uppercase text-white tracking-widest mb-3" style="letter-spacing: 3px;">OFERTAS</h3>
+                        <a asp-controller="Products" asp-action="Index" asp-route-category="Ofertas" class="btn btn-secondary text-uppercase fw-bold rounded-0 px-4 py-2 opacity-90" style="font-size: 0.8rem; letter-spacing: 1px; background-color: #5a4b41; border: none;">
+                            VER MÁS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. SECCIÓN: SHOWROOM Y UBICACIÓN -->
+    <div class="container mb-5 py-4 border-top border-secondary">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col">
+                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-center p-4" style="height: 320px;">
+                    <div>
+                        <h3 class="fw-light text-white mb-0" style="font-family: serif; letter-spacing: 2px;">Vault</h3>
+                        <small class="text-secondary">EST. 2026</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center text-center p-4" style="height: 320px;">
+                    <h3 class="fw-black text-uppercase text-white tracking-wider" style="letter-spacing: 3px;">SHOWROOM</h3>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="bg-dark border border-secondary d-flex flex-column align-items-center justify-content-center text-center p-4" style="height: 320px;">
+                    <p class="text-white small mb-1">General Alvear 245, Martinez, Buenos Aires.</p>
+                    <p class="text-secondary small mb-3">Martes a sábados de 14:00 a 19:00 hs.</p>
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-secondary text-uppercase fw-bold rounded-0 px-3 py-2" style="font-size: 0.75rem; letter-spacing: 1px; background-color: #5a4b41; border: none;">
+                        VER EN GOOGLE MAPS
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE BENEFICIOS INFERIOR -->
+        <div class="row text-center py-4 border-top border-secondary g-4">
+            <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
+                <i class="bi bi-truck fs-2 text-white"></i>
+                <div class="text-start">
+                    <h6 class="fw-bold text-uppercase mb-0 text-white" style="font-size: 0.85rem; letter-spacing: 1px;">COMPRÁ DESDE TU CASA</h6>
+                    <small class="text-secondary" style="font-size: 0.75rem;">Hacemos envíos a todo el país</small>
+                </div>
+            </div>
+
+            <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
+                <i class="bi bi-credit-card fs-2 text-white"></i>
+                <div class="text-start">
+                    <h6 class="fw-bold text-uppercase mb-0 text-white" style="font-size: 0.85rem; letter-spacing: 1px;">TODOS LOS MEDIOS DE PAGO</h6>
+                    <small class="text-secondary" style="font-size: 0.75rem;">Elegí el que te quede más cómodo</small>
+                </div>
+            </div>
+
+            <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
+                <i class="bi bi-tag fs-2 text-white"></i>
+                <div class="text-start">
+                    <h6 class="fw-bold text-uppercase mb-0 text-white" style="font-size: 0.85rem; letter-spacing: 1px;">VENÍ A PROBARTE TODO</h6>
+                    <small class="text-secondary" style="font-size: 0.75rem;">Te esperamos en nuestro showroom</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
