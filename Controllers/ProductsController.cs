@@ -1,171 +1,102 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Ecommerce_Vault.Data;
+using Ecommerce_Vault.Models;
 
-using EcommerceApp.Data;
-
-using EcommerceApp.Models;
-
-
-
-namespace EcommerceApp.Controllers
-
+namespace Ecommerce_Vault.Controllers
 {
-
-    // Constructor primario: "context" reemplaza el campo _context de antes. 
-
-    [Authorize]
-
-    public class ProductsController(ApplicationDbContext context) : Controller
-
+    public class ProductsController : Controller
     {
+        private readonly ApplicationDbContext _context;
 
-        [AllowAnonymous]
-
-        public async Task<IActionResult> Index()
-
+        public ProductsController(ApplicationDbContext context)
         {
-
-            var products = await context.Products.AsNoTracking().ToListAsync();
-
-            return View(products);
-
+            _context = context;
         }
 
-
-
-        [AllowAnonymous]
-
-        public async Task<IActionResult> Details(int id)
-
+        // GET: Products
+        public async Task<IActionResult> Index(string? category, string? searchString)
         {
+            var query = _context.Products.AsQueryable();
 
-            var product = await context.Products.FindAsync(id);
-
-            if (product == null) return NotFound();
-
-            return View(product);
-
-        }
-
-
-
-        [Authorize(Roles = "Admin")]
-
-        public IActionResult Create() => View();
-
-
-
-        [HttpPost]
-
-        [ValidateAntiForgeryToken]
-
-        [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> Create(Product product)
-
-        {
-
-            if (!ModelState.IsValid) return View(product);
-
-            context.Products.Add(product);
-
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-
-        }
-
-
-
-        [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> Edit(int id)
-
-        {
-
-            var product = await context.Products.FindAsync(id);
-
-            if (product == null) return NotFound();
-
-            return View(product);
-
-        }
-
-
-
-        [HttpPost]
-
-        [ValidateAntiForgeryToken]
-
-        [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> Edit(int id, Product product)
-
-        {
-
-            if (id != product.Id) return NotFound();
-
-            if (!ModelState.IsValid) return View(product);
-
-
-
-            product.UpdatedAt = DateTime.UtcNow;
-
-            context.Products.Update(product);
-
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-
-        }
-
-
-
-        [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> Delete(int id)
-
-        {
-
-            var product = await context.Products.FindAsync(id);
-
-            if (product == null) return NotFound();
-
-            return View(product);
-
-        }
-
-
-
-        [HttpPost, ActionName("Delete")]
-
-        [ValidateAntiForgeryToken]
-
-        [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> DeleteConfirmed(int id)
-
-        {
-
-            var product = await context.Products.FindAsync(id);
-
-            if (product != null)
-
+            // Filtrar por categoría simple (Partes de Arriba / Partes de Abajo)
+            if (!string.IsNullOrEmpty(category))
             {
-
-                context.Products.Remove(product);
-
-                await context.SaveChangesAsync();
-
+                if (category.Equals("Abajo", StringComparison.OrdinalIgnoreCase) || category.Equals("Partes de Abajo", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(p => p.Category == "Partes de Abajo" || p.Category == "Abajo");
+                }
+                else if (category.Equals("Arriba", StringComparison.OrdinalIgnoreCase) || category.Equals("Partes de Arriba", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(p => p.Category == "Partes de Arriba" || p.Category == "Arriba");
+                }
+                else if (category.Equals("Ofertas", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(p => p.Category == "Ofertas");
+                }
             }
 
-            return RedirectToAction(nameof(Index));
+            // Filtrar por búsqueda si se envió desde la barra superior
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => p.Name.Contains(searchString) || p.Description.Contains(searchString));
+            }
 
+            ViewBag.CurrentCategory = category;
+            ViewBag.SearchString = searchString;
+
+            return View(await query.ToListAsync());
         }
 
-    }
+        // GET: Products/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            // 1. Verificar si el ID enviado desde la URL es válido
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            // 2. Consultar a la base de datos por el producto específico
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
+
+            // 3. Si no existe, responder error 404
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // 4. Enviar el producto encontrado a la vista Details.cshtml
+            return View(product);
+        }
+
+        // GET: Products/Create
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Products/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,Category,ImageUrl")] Product product, string? additionalImages)
+        {
+            if (ModelState.IsValid)
+            {
+                // Si ingresaste imágenes adicionales, las concatenamos a la propiedad ImageUrl separadas por coma
+                if (!string.IsNullOrWhiteSpace(additionalImages))
+                {
+                    product.ImageUrl = $"{product.ImageUrl},{additionalImages}";
+                }
+
+                _context.Add(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
+        }
+    }
 }

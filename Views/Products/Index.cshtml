@@ -1,141 +1,228 @@
-﻿@model IEnumerable<EcommerceApp.Models.Product>
+﻿@model IEnumerable<Ecommerce_Vault.Models.Product>
 
 @{
-    ViewData["Title"] = "Catálogo de Productos | Vault";
+    ViewData["Title"] = ViewBag.CurrentCategory ?? "Productos";
+    string currentCategory = ViewBag.CurrentCategory ?? "Productos";
+    string searchString = ViewBag.SearchString;
+
+    // Si la base de datos no tiene productos registrados, genera 6 productos de prueba estáticos
+    var productsList = (Model != null && Model.Any())
+        ? Model.ToList()
+        : new List<Ecommerce_Vault.Models.Product>
+        {
+            new Ecommerce_Vault.Models.Product { Id = 1, Name = "OVERSIZED HOODIE BLACK", Price = 120.00m, ImageUrl = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop" },
+            new Ecommerce_Vault.Models.Product { Id = 2, Name = "VINTAGE DENIM JACKET", Price = 180.00m, ImageUrl = "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop" },
+            new Ecommerce_Vault.Models.Product { Id = 3, Name = "CARGO PANTS BEIGE", Price = 95.00m, ImageUrl = "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800&auto=format&fit=crop" },
+            new Ecommerce_Vault.Models.Product { Id = 4, Name = "GRAPHIC T-SHIRT VAULT", Price = 55.00m, ImageUrl = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop" },
+            new Ecommerce_Vault.Models.Product { Id = 5, Name = "MINIMALIST SNEAKERS", Price = 210.00m, ImageUrl = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=800&auto=format&fit=crop" },
+            new Ecommerce_Vault.Models.Product { Id = 6, Name = "LEATHER CAP URBAN", Price = 45.00m, ImageUrl = "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=800&auto=format&fit=crop" }
+        };
 }
 
-<div class="bg-black text-white py-5 min-vh-100">
-    <div class="container">
+<!-- Estilos específicos para la vista de Productos estilo Vault -->
+<style>
+    .vault-breadcrumb {
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
 
-        <!-- ENCABEZADO Y MIGA DE PAN -->
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
-            <div>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-secondary text-decoration-none">Inicio</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">Productos</li>
-                    </ol>
-                </nav>
-                <h2 class="fw-black text-uppercase tracking-wider mb-0" style="letter-spacing: 2px;">TODOS LOS PRODUCTOS</h2>
-            </div>
+    .vault-product-card {
+        background-color: #000;
+        border: none;
+        transition: transform 0.2s ease-in-out;
+    }
 
-            <!-- Selector de Ordenamiento -->
-            <div class="d-flex align-items-center gap-2">
-                <span class="text-secondary small d-none d-sm-inline">Ordenar por:</span>
-                <select class="form-select form-select-sm bg-black text-white border-secondary rounded-0 shadow-none" style="width: auto; font-size: 0.8rem;">
-                    <option selected>Más reciente</option>
-                    <option value="1">Precio: Menor a Mayor</option>
-                    <option value="2">Precio: Mayor a Menor</option>
-                </select>
-            </div>
+    .vault-img-container {
+        position: relative;
+        overflow: hidden;
+        background-color: #121212;
+        aspect-ratio: 1 / 1; /* Mantiene la proporción cuadrada exacta */
+    }
+
+        .vault-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+    .btn-vault-cart {
+        background-color: #8C6D53;
+        color: #ffffff;
+        border: none;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        padding: 8px 16px;
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-vault-cart:hover {
+            background-color: #a37a5b;
+            color: #ffffff;
+        }
+
+    .btn-vault-more {
+        background-color: #8C6D53;
+        color: #ffffff;
+        border: none;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        padding: 12px 35px;
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-vault-more:hover {
+            background-color: #a37a5b;
+            color: #ffffff;
+        }
+
+    .btn-admin-create {
+        background-color: transparent;
+        color: #ffc107;
+        border: 1px solid #ffc107;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        padding: 8px 20px;
+        transition: all 0.2s ease;
+    }
+
+        .btn-admin-create:hover {
+            background-color: #ffc107;
+            color: #000000;
+        }
+
+    .vault-sort-select {
+        background-color: #0d0d0d;
+        color: #fff;
+        border: 1px solid #444;
+        font-size: 0.85rem;
+        padding: 5px 12px;
+        border-radius: 0;
+    }
+
+        .vault-sort-select:focus {
+            background-color: #0d0d0d;
+            color: #fff;
+            border-color: #8C6D53;
+            box-shadow: none;
+        }
+</style>
+
+<div class="container py-2">
+    <!-- BARRA DE ADMINISTRACIÓN (Poblada únicamente para el Rol de Admin) -->
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+    {
+        <div class="d-flex justify-content-between align-items-center bg-dark p-3 mb-4 border border-warning rounded-0">
+            <span class="text-warning fw-bold text-uppercase fs-7">
+                <i class="bi bi-shield-lock-fill me-2"></i> Panel de Administración
+            </span>
+            <a asp-action="Create" class="btn btn-admin-create rounded-0">
+                <i class="bi bi-plus-lg me-1"></i> Crear Producto
+            </a>
+        </div>
+    }
+
+    <!-- Encabezado Superior: Breadcrumbs y Ordenar por -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-dark">
+        <!-- Breadcrumbs -->
+        <div class="vault-breadcrumb text-light">
+            <a asp-controller="Home" asp-action="Index" class="text-white text-decoration-none">Inicio</a>
+            <span class="text-secondary mx-1">/</span>
+            <span class="text-white text-capitalize">@currentCategory</span>
+            @if (!string.IsNullOrEmpty(searchString))
+            {
+                <span class="text-secondary ms-2">(Búsqueda: "@searchString")</span>
+            }
         </div>
 
-        <div class="row g-4">
-            <!-- FILTROS LATERALES -->
-            <div class="col-lg-3">
-                <div class="p-3 bg-dark border border-secondary">
-                    <h5 class="text-uppercase fw-bold mb-3 border-bottom border-secondary pb-2" style="letter-spacing: 1px; font-size: 0.9rem;">Categorías</h5>
-                    <ul class="list-unstyled mb-4">
-                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Todas las prendas</a></li>
-                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Arriba (Remeras / Hoodies)</a></li>
-                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Abajo (Pantalones / Shorts)</a></li>
-                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none">Accesorios</a></li>
-                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none text-warning">Ofertas / Drops</a></li>
-                    </ul>
+        <!-- Filtro Ordenar Por -->
+        <div class="d-flex align-items-center gap-2">
+            <label for="sortOrder" class="text-secondary small text-nowrap d-none d-sm-inline">Ordenar por</label>
+            <select id="sortOrder" class="form-select form-select-sm vault-sort-select">
+                <option value="newest">Más nuevo al más viejo</option>
+                <option value="oldest">Más viejo al más nuevo</option>
+                <option value="price-low">Precio: Menor a Mayor</option>
+                <option value="price-high">Precio: Mayor a Menor</option>
+            </select>
+        </div>
+    </div>
 
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Create" class="btn btn-outline-light text-uppercase fw-bold rounded-0 w-100 py-2" style="font-size: 0.75rem;">
-                            + Publicar Producto
+    <!-- Grilla de Productos (3 Columnas por Fila) -->
+    <div class="row g-4 mb-5">
+        @foreach (var item in productsList)
+        {
+            var transferPrice = item.Price * 0.90m;
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card vault-product-card h-100 text-center">
+                    <!-- Imagen del producto -->
+                    <div class="vault-img-container mb-3">
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
+                            <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/placeholder.jpg" : item.ImageUrl)"
+                                 alt="@item.Name"
+                                 loading="lazy" />
                         </a>
-                    }
+                    </div>
+
+                    <!-- Información del Producto -->
+                    <div class="card-body p-0 d-flex flex-column justify-content-between">
+                        <div>
+                            <!-- Nombre del producto -->
+                            <h6 class="text-uppercase fw-bold text-light mb-2 fs-7 tracking-wide" style="font-size: 0.85rem;">
+                                @item.Name
+                            </h6>
+
+                            <!-- Precio Normal -->
+                            <div class="fw-black text-white fs-5 mb-1">
+                                $@item.Price.ToString("N2")
+                            </div>
+
+                            <!-- Precio con Transferencia -->
+                            <div class="text-secondary mb-3 fs-7" style="font-size: 0.8rem;">
+                                <span class="fw-bold text-light">$@transferPrice.ToString("N2")</span> con Transferencia
+                            </div>
+                        </div>
+
+                        <!-- Formulario para Agregar al Carrito -->
+                        <div class="mt-2">
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="productoId" value="@item.Id" />
+                                <input type="hidden" name="cantidad" value="1" />
+                                <button type="submit" class="btn btn-vault-cart rounded-0 w-100 mb-2">
+                                    <i class="bi bi-cart-plus me-1"></i> AGREGAR AL CARRITO
+                                </button>
+                            </form>
+
+                            <!-- Acciones Exclusivas del Administrador -->
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                            {
+                                <div class="d-flex justify-content-center gap-2 mt-2 pt-2 border-top border-secondary">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-0 w-50" style="font-size: 0.75rem;">
+                                        Editar
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-0 w-50" style="font-size: 0.75rem;">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
+        }
+    </div>
 
-            <!-- GRILLA DE PRODUCTOS -->
-            <div class="col-lg-9">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-
-                    @if (Model != null && Model.Any())
-                    {
-                        @foreach (var item in Model)
-                        {
-                            <div class="col">
-                                <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
-                                    <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
-                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
-                                        {
-                                            <img src="@item.ImageUrl" class="img-fluid h-100 w-100 object-fit-cover" alt="@item.Name" />
-                                        }
-                                        else
-                                        {
-                                            <span class="text-secondary fw-bold small">📷 [ @item.Name.ToUpper() ]</span>
-                                        }
-                                    </div>
-                                    <div class="card-body p-0 d-flex flex-column align-items-center">
-                                        <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">@item.Name</h6>
-                                        <p class="fw-bold fs-5 mb-3">$@item.Price.ToString("N2")</p>
-
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
-                                            Ver Detalle
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <!-- Muestra estática si no hay productos cargados en la base de datos -->
-                        <div class="col">
-                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
-                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
-                                    <span class="text-secondary fw-bold small">📷 [ WORK SHORT DICKIES ]</span>
-                                </div>
-                                <div class="card-body p-0 d-flex flex-column align-items-center">
-                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">WORK SHORT DICKIES - T. 48</h6>
-                                    <p class="fw-bold fs-5 mb-3">$64.990,00</p>
-                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
-                                        Agregar al Carrito
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
-                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
-                                    <span class="text-secondary fw-bold small">📷 [ REMERA HARLEY DAVIDSON ]</span>
-                                </div>
-                                <div class="card-body p-0 d-flex flex-column align-items-center">
-                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">REMERA HARLEY DAVIDSON - T. XL</h6>
-                                    <p class="fw-bold fs-5 mb-3">$49.990,00</p>
-                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
-                                        Agregar al Carrito
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card h-100 bg-black text-white border-0 text-center rounded-0">
-                                <div class="bg-dark border border-secondary d-flex align-items-center justify-content-center mb-3" style="height: 320px;">
-                                    <span class="text-secondary fw-bold small">📷 [ JEAN LEVI'S 501 ]</span>
-                                </div>
-                                <div class="card-body p-0 d-flex flex-column align-items-center">
-                                    <h6 class="text-uppercase fw-normal mb-1" style="letter-spacing: 1px; font-size: 0.85rem;">JEAN LEVIS 501 VINTAGE - T. 42</h6>
-                                    <p class="fw-bold fs-5 mb-3">$72.000,00</p>
-                                    <button class="btn btn-outline-light text-uppercase fw-semibold rounded-0 px-4 py-2 w-100 mt-auto" style="font-size: 0.75rem; letter-spacing: 1.5px;">
-                                        Agregar al Carrito
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                </div>
-            </div>
-        </div>
-
+    <!-- Botón Mostrar Más Productos -->
+    <div class="text-center my-5 pt-3">
+        <button class="btn btn-vault-more rounded-0">
+            MOSTRAR MÁS PRODUCTOS
+        </button>
     </div>
 </div>

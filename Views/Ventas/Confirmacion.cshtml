@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Compra realizada";
+}
+
+<div class="container my-5 text-center py-5">
+    <div class="border border-secondary bg-black p-5 d-inline-block" style="max-width: 500px;">
+        <i class="bi bi-check-circle-fill text-warning display-3"></i>
+        <h2 class="text-white text-uppercase fw-black mt-3">¡Gracias por tu compra!</h2>
+        <p class="text-secondary fs-7 mt-2">Tu pedido ha sido registrado correctamente en la base de datos de Supabase.</p>
+
+        <a asp-controller="Products" asp-action="Index" class="btn btn-outline-light rounded-0 text-uppercase fw-bold mt-4">
+            Volver a la tienda
+        </a>
+    </div>
+</div>

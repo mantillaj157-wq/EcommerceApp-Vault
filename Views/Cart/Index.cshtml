@@ -1,0 +1,112 @@
+﻿@model List<Ecommerce_Vault.Models.ViewModels.CartItemViewModel>
+@{
+    ViewData["Title"] = "Mi carrito";
+    decimal total = Model?.Sum(x => x.Subtotal) ?? 0;
+}
+
+<div class="container my-5">
+    <h1 class="fw-black text-uppercase text-white tracking-widest mb-4 d-flex align-items-center">
+        <i class="bi bi-cart3 me-3 text-warning"></i> Mi carrito
+    </h1>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5 border border-secondary rounded-0 bg-dark">
+            <i class="bi bi-cart-x fs-1 text-muted"></i>
+            <h4 class="text-white text-uppercase mt-3">Tu carrito está vacío</h4>
+            <p class="text-secondary fs-7">Explora nuestras colecciones y añade tus prendas favoritas.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-outline-light rounded-0 text-uppercase fw-bold mt-2">
+                Ver Productos
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Tabla de Productos seleccionados -->
+            <div class="col-12 col-lg-8">
+                <div class="table-responsive border border-secondary bg-black p-3">
+                    <table class="table table-dark align-middle mb-0">
+                        <thead>
+                            <tr class="text-secondary text-uppercase fs-7 border-bottom border-secondary">
+                                <th scope="col" style="min-width: 200px;">Producto</th>
+                                <th scope="col" class="text-center">Precio</th>
+                                <th scope="col" class="text-center">Cantidad</th>
+                                <th scope="col" class="text-end">Subtotal</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="border-bottom border-secondary">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="@(string.IsNullOrEmpty(item.ImagenUrl) ? "/images/placeholder.jpg" : item.ImagenUrl)"
+                                                 alt="@item.Nombre" class="img-fluid border border-secondary me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="text-white text-uppercase fw-bold mb-0 fs-7">@item.Nombre</h6>
+                                                <small class="text-secondary fs-8">Disponible: @item.StockDisponible</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center fw-semibold fs-7">Bs @item.Precio.ToString("F2")</td>
+                                    <td class="text-center" style="width: 130px;">
+                                        <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="d-flex align-items-center justify-content-center">
+                                            <input type="hidden" name="productoId" value="@item.ProductoId" />
+                                            <input type="number" name="cantidad" value="@item.Cantidad" min="1" max="@item.StockDisponible"
+                                                   class="form-control form-control-sm bg-dark text-white border-secondary text-center shadow-none me-1" style="width: 50px;">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary p-1" title="Actualizar">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td class="text-end fw-bold text-white fs-7">Bs @item.Subtotal.ToString("F2")</td>
+                                    <td class="text-center">
+                                        <form asp-controller="Cart" asp-action="RemoveItem" method="post" class="d-inline">
+                                            <input type="hidden" name="productoId" value="@item.ProductoId" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Eliminar">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-controller="Products" asp-action="Index" class="btn btn-outline-light rounded-0 text-uppercase fw-semibold fs-7">
+                            ← Seguir comprando
+                        </a>
+                        <form asp-controller="Cart" asp-action="ClearCart" method="post">
+                            <button type="submit" class="btn btn-outline-danger rounded-0 text-uppercase fw-semibold fs-7">
+                                <i class="bi bi-trash me-1"></i> Vaciar carrito
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen Lateral de la Compra -->
+            <div class="col-12 col-lg-4">
+                <div class="border border-secondary bg-black p-4">
+                    <h5 class="text-white text-uppercase fw-bold mb-3 border-bottom border-secondary pb-2">Resumen</h5>
+                    <div class="d-flex justify-content-between text-secondary fs-7 mb-3">
+                        <span>Productos</span>
+                        <span class="text-white fw-bold">@Model.Sum(x => x.Cantidad)</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between text-white border-top border-secondary pt-3 fs-5 fw-black">
+                        <span>Total</span>
+                        <span style="color: #8C6D53;">Bs @total.ToString("F2")</span>
+                    </div>
+
+                    <a asp-controller="Ventas" asp-action="Checkout" class="btn w-100 rounded-0 text-uppercase fw-bold mt-4 py-2" style="background-color: #8C6D53; color: #fff;">
+                        <i class="bi bi-bag-check me-2"></i> Finalizar compra
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,25 +1,35 @@
-using EcommerceApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Ecommerce_Vault.Data;
 
-namespace EcommerceApp.Controllers
+namespace Ecommerce_Vault.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            // Carga los productos para el "Último Drop" de la portada
+            var products = await _context.Products.ToListAsync();
+            return View(products);
+        }
+
+        // ACCIÓN NUEVA: Guía de Talles
+        public IActionResult Talles()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        // ACCIÓN NUEVA: Preguntas Frecuentes
+        public IActionResult Preguntas()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -1,62 +1,51 @@
-﻿@model EcommerceApp.Models.RegisterViewModel
+﻿@model Ecommerce_Vault.Models.RegisterViewModel
 
-<h2>Registro</h2>
+@{
+    ViewData["Title"] = "Registro";
+}
 
-<form asp-action="Register" method="post">
+<div class="row justify-content-center my-5">
+    <div class="col-md-6">
+        <div class="card card-vintage p-4">
+            <h2 class="text-uppercase text-center fw-bold text-light mb-4 tracking-wide">CREAR CUENTA</h2>
 
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="form-group mb-2">
+                <div class="form-group mb-3">
+                    <label asp-for="FullName" class="form-label text-uppercase fs-7 text-secondary fw-bold">Nombre Completo</label>
+                    <input asp-for="FullName" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
 
-        <label asp-for="FullName"></label>
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="form-label text-uppercase fs-7 text-secondary fw-bold">Correo Electrónico</label>
+                    <input asp-for="Email" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
 
-        <input asp-for="FullName" class="form-control" />
+                <div class="form-group mb-3">
+                    <label asp-for="Password" class="form-label text-uppercase fs-7 text-secondary fw-bold">Contraseña</label>
+                    <input asp-for="Password" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
 
-        <span asp-validation-for="FullName" class="text-danger"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label text-uppercase fs-7 text-secondary fw-bold">Confirmar Contraseña</label>
+                    <input asp-for="ConfirmPassword" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
 
+                <div class="form-group mb-4">
+                    <label asp-for="Address" class="form-label text-uppercase fs-7 text-secondary fw-bold">Dirección de Envío</label>
+                    <input asp-for="Address" class="form-control bg-dark text-light border-secondary rounded-0" />
+                </div>
+
+                <button type="submit" class="btn btn-warning text-dark w-100 fw-bold text-uppercase rounded-0 py-2 tracking-wide">CREAR CUENTA</button>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group mb-2">
-
-        <label asp-for="Email"></label>
-
-        <input asp-for="Email" class="form-control" />
-
-        <span asp-validation-for="Email" class="text-danger"></span>
-
-    </div>
-
-    <div class="form-group mb-2">
-
-        <label asp-for="Password"></label>
-
-        <input asp-for="Password" class="form-control" />
-
-        <span asp-validation-for="Password" class="text-danger"></span>
-
-    </div>
-
-    <div class="form-group mb-2">
-
-        <label asp-for="ConfirmPassword"></label>
-
-        <input asp-for="ConfirmPassword" class="form-control" />
-
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-
-    </div>
-
-    <div class="form-group mb-2">
-
-        <label asp-for="Address"></label>
-
-        <input asp-for="Address" class="form-control" />
-
-    </div>
-
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

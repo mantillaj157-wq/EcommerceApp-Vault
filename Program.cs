@@ -1,51 +1,36 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using EcommerceApp.Data;
-using EcommerceApp.Models;
+using Ecommerce_Vault.Data;
+using Ecommerce_Vault.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- OBTENER Y ADAPTAR CADENA DE CONEXIÓN ---
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Si la cadena proviene de Supabase/Render en formato postgresql:// o postgres://
-if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgresql://") || connectionString.StartsWith("postgres://")))
-{
-    var databaseUri = new Uri(connectionString);
-    var userInfo = databaseUri.UserInfo.Split(':');
-    
-    var builderDb = new Npgsql.NpgsqlConnectionStringBuilder
-    {
-        Host = databaseUri.Host,
-        Port = databaseUri.Port > 0 ? databaseUri.Port : 5432,
-        Username = userInfo[0],
-        Password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "",
-        Database = databaseUri.LocalPath.TrimStart('/'),
-        SslMode = Npgsql.SslMode.Require,
-        TrustServerCertificate = true
-    };
-    
-    connectionString = builderDb.ToString();
-}
-
+// Configuración de la base de datos con PostgreSQL (Supabase)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- CONFIGURACIÓN DE IDENTITY Y COOKIES ---
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
+// Configuración de ASP.NET Core Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
+// Configuración de Cookies de autenticación
+builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     options.SlidingExpiration = true;
+});
+
+// Configuración de la Sesión para el Carrito de Compras
+builder.Services.AddDistributedMemoryCache(); // Requerido para almacenar las sesiones en memoria
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Tiempo de expiración del carrito inactivo
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddControllersWithViews();
@@ -60,28 +45,29 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
+// Middleware de Sesión (debe ir antes de Authentication y Authorization)
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+// La ruta predeterminada apunta a Home/Index
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Products}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// --- CREACIÓN AUTOMÁTICA DE ROLES ---
+// Crear roles por defecto ("Admin" y "User") si no existen
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roles = { "Admin", "User" };
-
     foreach (var role in roles)
     {
-        var roleExists = roleManager.RoleExistsAsync(role).GetAwaiter().GetResult();
-        if (!roleExists)
-        {
-            roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
-        }
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
     }
 }
 

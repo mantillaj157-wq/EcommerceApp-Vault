@@ -1,31 +1,441 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Paleta y Tipografía Vintage Vault */
 body {
-  margin-bottom: 60px;
+    font-family: 'Inter', sans-serif;
+    background-color: #0d0d0d !important;
+    color: #e5e5e5;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+h1, h2, h3, h4, h5, .navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    letter-spacing: 1.5px;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.tracking-wide {
+    letter-spacing: 1.5px;
+}
+
+.tracking-wider {
+    letter-spacing: 2.5px;
+}
+
+.fs-7 {
+    font-size: 0.8rem;
+}
+
+/* Header & Nav */
+.nav-link {
+    transition: color 0.2s ease;
+}
+
+    .nav-link:hover {
+        color: #ffc107 !important;
+    }
+
+input[type="search"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Tarjetas de Producto */
+.card-vintage {
+    background-color: #141414;
+    border: 1px solid #262626;
+    border-radius: 0px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+    .card-vintage:hover {
+        transform: translateY(-4px);
+        border-color: #ffc107;
+    }
+
+.product-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    aspect-ratio: 3 / 4;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.95);
+    transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.card-vintage:hover .product-img {
+    transform: scale(1.04);
+    filter: brightness(1.05);
+}
+
+.badge-vintage {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #000000;
+    color: #ffc107;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid #333;
+}
+
+/* Botones Personalizados */
+.btn-black {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 0px;
+    font-weight: 700;
+    border: 1px solid #ffffff;
+    transition: all 0.2s ease;
+}
+
+    .btn-black:hover {
+        background-color: #ffc107;
+        color: #000000;
+        border-color: #ffc107;
+    }
+
+.btn-outline-vintage {
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    border-radius: 0px;
+    font-weight: 600;
+}
+
+    .btn-outline-vintage:hover {
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+/* Rejilla de imágenes 2x2 (Hero Banner) */
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.hero-grid-item {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #141414;
+    border: 1px solid #262626;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.hero-grid-item:hover .hero-img {
+    transform: scale(1.05);
+    filter: brightness(1.05);
+}
+
+.hero-title {
+    font-weight: 900 !important;
+    letter-spacing: 1.5px;
+}
+
+/* --- TARJETAS INTERACTIVAS (ARRIBA, ABAJO, OFERTAS) --- */
+.category-card {
+    aspect-ratio: 1 / 1;
+    background-color: #141414;
+    border: 1px solid #262626;
+    cursor: pointer;
+}
+
+/* Efecto Zoom en la imagen al hacer hover */
+.category-img {
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.5s ease;
+    filter: brightness(0.75);
+}
+
+.category-card:hover .category-img {
+    transform: scale(1.08); /* Acerca la imagen */
+    filter: brightness(0.85);
+}
+
+/* Oscurecido y Alineación del texto */
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    transition: background 0.3s ease;
+}
+
+.category-card:hover .category-overlay {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Título sobre la imagen */
+.category-title {
+    font-size: 2.2rem;
+    letter-spacing: 3px !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Botón estilo "VER MÁS" marrón idéntico a la imagen */
+.btn-category-more {
+    background-color: #5c3a21;
+    color: #ffffff;
+    padding: 8px 22px;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .btn-category-more:hover {
+        background-color: #7a4e2c;
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+
+/* Efectos de enlaces en el Footer */
+.hover-warning:hover {
+    color: #ffc107 !important;
+    transition: color 0.2s ease;
+}
+
+/* Divisores verticales para la sección de beneficios en pantallas medianas/grandes */
+@media (min-width: 768px) {
+    .border-end-md {
+        border-right: 1px solid #333 !important;
+    }
+}
+
+/* --- ESTILOS DE NAVEGACIÓN Y TALLES (VAULT) --- */
+
+/* Tipografía gruesa para títulos estilo Vintage Vault */
+.fw-black {
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.tracking-wide {
+    letter-spacing: 1px;
+}
+
+.tracking-widest {
+    letter-spacing: 2px;
+}
+
+/* Cambiar la barra '/' del Breadcrumb a color blanco */
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #ffffff !important;
+    content: "/";
+}
+
+/* Efecto Hover para los enlaces del Footer */
+.hover-warning:hover {
+    color: #ffc107 !important;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Ajuste de opacidad para los textos explicativos */
+.opacity-90 {
+    opacity: 0.9;
+}
+
+/* Reducir el tamaño de fuente auxiliar */
+.fs-7 {
+    font-size: 0.85rem;
+}
+
+/* --- SUBRAYADO PARA NAVEGACIÓN Y BREADCRUMB --- */
+
+/* Subrayado al pasar el cursor en el Breadcrumb (Inicio) */
+.breadcrumb-item a:hover {
+    text-decoration: underline !important;
+}
+
+/* Estilo del elemento activo del menú superior (Línea arriba y abajo) */
+.navbar-nav .nav-link {
+    position: relative;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+    /* Estado Activo y Hover en la barra superior */
+    .navbar-nav .nav-link.active,
+    .navbar-nav .nav-link:hover {
+        border-top-color: rgba(255, 255, 255, 0.6) !important;
+        border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+        color: #ffffff !important;
+    }
+
+/* --- ESTILO MENU DESPLEGABLE DROPDOWN (PRODUCTOS) Y SUBMENÚS --- */
+
+/* Quitar la flecha por defecto de Bootstrap en el nav-link */
+.custom-dropdown .dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Menú desplegable flotante */
+.custom-dropdown-menu {
+    background-color: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    min-width: 240px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+/* Opciones dentro del menú */
+.custom-dropdown-item {
+    color: #ffffff !important;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    /* Efecto Hover en las opciones internas */
+    .custom-dropdown-item:hover {
+        background-color: #111111 !important;
+        color: #ffffff !important;
+    }
+
+    /* Icono de flecha dentro del desplegable */
+    .custom-dropdown-item i {
+        font-size: 0.75rem;
+        opacity: 0.7;
+    }
+
+/* --- LÓGICA DE SUBMENÚS DESPLEGABLES (SUBMENU) --- */
+.dropdown-submenu {
+    position: relative;
+}
+
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -1px;
+        display: none;
+    }
+
+/* Apertura por Hover en pantallas de escritorio (min-width: 992px) */
+@media (min-width: 992px) {
+    .custom-dropdown:hover > .dropdown-menu {
+        display: block !important;
+        margin-top: 0;
+    }
+
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    }
+}
+
+/* Ajustes para pantallas pequeñas (móviles) */
+@media (max-width: 991.98px) {
+    .dropdown-submenu > .dropdown-menu {
+        position: static;
+        left: 0;
+        margin-left: 1rem;
+        border: none !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    }
+}
+/* ==========================================================================
+   CONFIGURACIÓN PWA Y BÚSQUEDA POR VOZ (WEB SPEECH API) - VAULT STORE
+   ========================================================================== */
+
+/* Banner Flotante de Instalación PWA */
+#pwaInstallBanner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #0d0d0d;
+    border-top: 2px solid #8C6D53;
+    z-index: 9998;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.8);
+    transform: translateY(100%);
+    transition: transform 0.4s ease-in-out;
+}
+
+    #pwaInstallBanner.show {
+        transform: translateY(0);
+    }
+
+.btn-vault-install {
+    background-color: #8C6D53;
+    color: #ffffff;
+    border: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 8px 18px;
+    text-transform: uppercase;
+}
+
+    .btn-vault-install:hover {
+        background-color: #a37a5b;
+        color: #ffffff;
+    }
+
+/* Botón Flotante Inferior Derecho de Voz (Estilo Vintage Vault) */
+.voice-float-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 58px;
+    height: 58px;
+    background-color: #8C6D53;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 9999;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+    .voice-float-btn:hover {
+        transform: scale(1.08);
+        background-color: #a37a5b;
+        color: #ffffff;
+    }
+
+/* Animación de Parpadeo Rojo durante la Escucha */
+.listening-active {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    animation: pulse-mic 1.2s infinite;
+}
+
+@keyframes pulse-mic {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
 }

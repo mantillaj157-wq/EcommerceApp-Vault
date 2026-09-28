@@ -1,45 +1,43 @@
-﻿@model EcommerceApp.Models.LoginViewModel
+﻿@model Ecommerce_Vault.Models.LoginViewModel
 
-<h2>Iniciar Sesión</h2>
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
 
-<form asp-action="Login" method="post">
+<div class="row justify-content-center my-5">
+    <div class="col-md-5">
+        <div class="card card-vintage p-4">
+            <h2 class="text-uppercase text-center fw-bold text-light mb-4 tracking-wide">INICIAR SESIÓN</h2>
 
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="form-group mb-2">
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="form-label text-uppercase fs-7 text-secondary fw-bold">Correo Electrónico</label>
+                    <input asp-for="Email" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
 
-        <label asp-for="Email"></label>
+                <div class="form-group mb-3">
+                    <label asp-for="Password" class="form-label text-uppercase fs-7 text-secondary fw-bold">Contraseña</label>
+                    <input asp-for="Password" class="form-control bg-dark text-light border-secondary rounded-0" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
 
-        <input asp-for="Email" class="form-control" />
+                <div class="form-check mb-4">
+                    <input asp-for="RememberMe" class="form-check-input bg-dark border-secondary" />
+                    <label asp-for="RememberMe" class="form-check-label text-secondary fs-7">Recordarme</label>
+                </div>
 
-        <span asp-validation-for="Email" class="text-danger"></span>
-
+                <button type="submit" class="btn btn-warning text-dark w-100 fw-bold text-uppercase rounded-0 py-2 tracking-wide mb-3">INGRESAR</button>
+                <div class="text-center">
+                    <a href="@Url.Action("Register")" class="text-secondary fs-7 text-uppercase">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group mb-2">
-
-        <label asp-for="Password"></label>
-
-        <input asp-for="Password" class="form-control" />
-
-        <span asp-validation-for="Password" class="text-danger"></span>
-
-    </div>
-
-    <div class="form-group form-check mb-2">
-
-        <input asp-for="RememberMe" class="form-check-input" />
-
-        <label asp-for="RememberMe" class="form-check-label"></label>
-
-    </div>
-
-    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-
-    <a href="@Url.Action("Register")" class="btn btn-link">Registrarse</a>
-
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+}dotnet
